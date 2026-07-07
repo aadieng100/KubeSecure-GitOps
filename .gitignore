@@ -1,0 +1,56 @@
+# ==========================================
+# SYSTEM & IDEs
+# ==========================================
+.DS_Store
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# ==========================================
+# JAVA / MAVEN (Application)
+# ==========================================
+app/target/
+*.jar
+*.war
+*.ear
+*.class
+.mtj.tmp/
+*.attachments
+*.rebel.xml
+HS_ERR_PID_*
+
+# ==========================================
+# DOCKER
+# ==========================================
+.docker/
+*.tar
+
+# ==========================================
+# TERRAFORM
+# ==========================================
+# Local hidden directory containing providers binaries and modules cache
+**/.terraform/
+
+# TF State files contain sensitive data and plain text secrets
+*.tfstate
+*.tfstate.*
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Override variables files (where you put real secrets locally)
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+_override.tf
+_override.tf.json
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
