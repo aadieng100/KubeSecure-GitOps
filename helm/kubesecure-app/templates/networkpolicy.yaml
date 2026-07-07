@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Release.Name }}-netpol
+  labels:
+    app: kubesecure-api
+spec:
+  podSelector:
+    matchLabels:
+      app: kubesecure-api
+  policyTypes:
+    - Ingress
+    - Egress
+  # DevSecOps: Define strict rules for incoming traffic (Ingress)
+  ingress:
+    - from:
+        - podSelector: {} # In local, allows traffic from other pods (like ArgoCD or an Ingress Controller)
+      ports:
+        - protocol: TCP
+          port: 8080
+  # DevSecOps: Define strict rules for outgoing traffic (Egress)
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres # Restrict outbound traffic only to pods labeled as postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    - to:
+        - namespaceSelector: {} # Allow outbound traffic to kube-system for DNS resolution (CoreDNS)
+      ports:
+        - protocol: UDP
+          port: 53
