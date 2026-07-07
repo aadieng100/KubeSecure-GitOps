@@ -1,0 +1,48 @@
+# Global configurations
+replicaCount: 2
+
+image:
+  # In local, we will load the image directly into Kind/Minikube cache
+  # In AWS, this will point to your AWS ECR Registry
+  repository: kubesecure/gitops-api
+  pullPolicy: IfNotPresent
+  tag: "1.0.0"
+
+# Target environment toggle: 'local' or 'aws'
+environment: "local"
+
+# Database connection details (Injected into Spring Boot)
+database:
+  host: "postgres-service"
+  port: 5432
+  name: "kubesecure_db"
+  user: "postgres"
+  # In production, password should be injected via External Secrets or Vault
+  secretName: "postgres-credentials"
+
+# Security Contexts at Pod and Container level
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+
+# Resource management for micro-segmentation and protection against DoS
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+service:
+  type: ClusterIP
+  port: 8080
