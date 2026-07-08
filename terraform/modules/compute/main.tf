@@ -31,7 +31,7 @@ resource "aws_security_group_rule" "nodes_internal" {
 resource "aws_eks_cluster" "main" {
   name     = "${var.project_name}-${var.environment}-cluster"
   role_arn = var.cluster_role_arn
-  version  = "1.28" # Stable and enterprise-ready version
+  version  = "1.30" # Stable and enterprise-ready version
 
   vpc_config {
     subnet_ids              = var.private_subnet_ids

@@ -33,7 +33,7 @@ resource "aws_security_group" "db" {
 resource "aws_db_instance" "main" {
   identifier             = "${var.project_name}-${var.environment}-db"
   engine                 = "postgres"
-  engine_version         = "15.4"
+  engine_version         = "15"
   instance_class         = "db.t4g.micro" # Instance économique (Graviton AWS)
   allocated_storage      = 20
   max_allocated_storage  = 50
