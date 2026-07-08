@@ -162,3 +162,5 @@ In a continuous, long-lived production pipeline, this posture should evolve towa
 1. **Enable an OIDC provider identity** on the EKS cluster.
 2. **Set up IRSA (IAM Roles for Service Accounts)** to establish a cryptographic trust link between an EKS pod and AWS IAM without hardcoded access tokens.
 3. **Introduce the External Secrets Operator (ESO)** inside the cluster to consume that token, fetch credentials directly from AWS Secrets Manager, and rotate them automatically without manual intervention.
+
+<!-- repository metadata updated -->
