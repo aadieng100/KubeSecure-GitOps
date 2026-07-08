@@ -1,11 +1,11 @@
-# Groupement des sous-réseaux isolés pour la DB
+# Grouping of the isolated subnets for the DB
 resource "aws_db_subnet_group" "main" {
   name       = "${var.project_name}-${var.environment}-db-subnet-group"
   subnet_ids = var.database_subnet_ids
   tags       = { Name = "${var.project_name}-${var.environment}-db-subnet-group" }
 }
 
-# Pare-feu (Security Group) strict pour RDS
+# Strict firewall (Security Group) for RDS
 resource "aws_security_group" "db" {
   name        = "${var.project_name}-${var.environment}-db-sg"
   description = "Allow inbound traffic from EKS worker nodes only"
@@ -29,12 +29,12 @@ resource "aws_security_group" "db" {
   tags = { Name = "${var.project_name}-${var.environment}-db-sg" }
 }
 
-# Instance RDS PostgreSQL 15 sécurisée et chiffrée
+# Secured and encrypted RDS PostgreSQL 15 instance
 resource "aws_db_instance" "main" {
   identifier             = "${var.project_name}-${var.environment}-db"
   engine                 = "postgres"
   engine_version         = "15"
-  instance_class         = "db.t4g.micro" # Instance économique (Graviton AWS)
+  instance_class         = "db.t4g.micro" # Cost-effective instance (AWS Graviton)
   allocated_storage      = 20
   max_allocated_storage  = 50
   db_name                = "kubesecure_db"

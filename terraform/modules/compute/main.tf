@@ -1,4 +1,4 @@
-# 1. Security Group pour les Nodes EKS (Utile pour le filtrage vers RDS)
+# 1. Security Group for the EKS Nodes (Used for filtering traffic toward RDS)
 resource "aws_security_group" "eks_nodes" {
   name        = "${var.project_name}-${var.environment}-node-sg"
   description = "Security group for all nodes in the cluster"
@@ -27,7 +27,7 @@ resource "aws_security_group_rule" "nodes_internal" {
   type                     = "ingress"
 }
 
-# 2. Le Cluster EKS (Control Plane managé)
+# 2. The EKS Cluster (Managed Control Plane)
 resource "aws_eks_cluster" "main" {
   name     = "${var.project_name}-${var.environment}-cluster"
   role_arn = var.cluster_role_arn
@@ -40,7 +40,7 @@ resource "aws_eks_cluster" "main" {
   }
 }
 
-# 3. Le Node Group (Les machines EC2 éphémères qui feront tourner l'API)
+# 3. The Node Group (The ephemeral EC2 machines that will run the API)
 resource "aws_eks_node_group" "main" {
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = "${var.project_name}-${var.environment}-node-group"
