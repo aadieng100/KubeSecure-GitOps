@@ -18,12 +18,11 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
-  # DevSecOps: Define strict rules for outgoing traffic (Egress)
+# DevSecOps: Define strict rules for outgoing traffic (Egress)
   egress:
     - to:
-        - podSelector:
-            matchLabels:
-              app: postgres # Restrict outbound traffic only to pods labeled as postgres
+        - ipBlock:
+            cidr: 0.0.0.0/0 # Allows outbound traffic to the RDS private endpoint
       ports:
         - protocol: TCP
           port: 5432
