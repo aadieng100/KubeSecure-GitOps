@@ -1,8 +1,110 @@
 # 🛡️ KubeSecure-GitOps
 
-An enterprise-grade, security-hardened GitOps deployment pipeline built with **Helm**, **ArgoCD**, and a highly decoupled **Terraform Infrastructure Pattern Library**. It deploys a secure Spring Boot REST API connected to a managed PostgreSQL database on **AWS EKS** and **Amazon RDS**.
+> **Security-hardened Kubernetes GitOps platform** — from local Kind cluster to AWS EKS, with zero-trust networking, distroless containers, and infrastructure-as-code enforced at every layer.
 
-The project follows a rigorous **Local-First development strategy** — every workload is validated inside a local Kubernetes Kind cluster before being promoted to a production-representative, strongly isolated cloud infrastructure through a frictionless migration path.
+![AWS](https://img.shields.io/badge/AWS-EKS%20%7C%20RDS%20%7C%20VPC-FF9900?logo=amazonaws&logoColor=white)
+![Terraform](https://img.shields.io/badge/Terraform-modular-7B42BC?logo=terraform&logoColor=white)
+![ArgoCD](https://img.shields.io/badge/ArgoCD-GitOps-EF7B4D?logo=argo&logoColor=white)
+![Helm](https://img.shields.io/badge/Helm-packaged-0F1689?logo=helm&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-1.30-326CE5?logo=kubernetes&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-REST%20API-6DB33F?logo=springboot&logoColor=white)
+
+> 📌 **Portfolio / demo project** — production-inspired architecture and security posture built to demonstrate real-world platform engineering competencies. Not a claim of live production usage.
+
+---
+
+## 🎯 Summary
+
+KubeSecure-GitOps is a fully integrated DevSecOps platform that provisions hardened AWS infrastructure with Terraform, packages a Spring Boot REST API into a distroless container, and delivers it to AWS EKS through an ArgoCD GitOps pipeline. Every design decision — from subnet segmentation to Kubernetes NetworkPolicies — is driven by a least-privilege, defense-in-depth security model.
+
+The workflow follows a **local-first** discipline: workloads are validated inside a Kind cluster before promotion to cloud infrastructure, reflecting how platform teams reduce blast radius during development.
+
+---
+
+## ✅ What This Project Demonstrates
+
+| Area | Skills Evidenced |
+|---|---|
+| **GitOps** | ArgoCD Application CRs, reconciliation loop, sync strategies |
+| **Infrastructure as Code** | Modular Terraform pattern library; environment composition roots |
+| **AWS Networking** | VPC, 3-tier subnet segmentation (public / private / isolated), NAT Gateway |
+| **Compute & Data** | Private EKS 1.30 managed node groups, RDS PostgreSQL 15 in an isolated subnet |
+| **Container Security** | Multi-stage build, distroless base image, non-root UID, read-only root filesystem |
+| **Kubernetes Security** | Default-deny NetworkPolicies, resource limits, least-privilege pod spec |
+| **IAM & KMS** | Scoped EKS control-plane and worker-node roles, KMS-encrypted RDS storage |
+| **Platform Workflow** | Kind → ECR → EKS promotion path with a single values-file flip |
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Application** | Spring Boot (Java), REST API |
+| **Container** | Docker multi-stage build, Google Distroless base |
+| **Package Management** | Helm |
+| **GitOps Engine** | ArgoCD |
+| **Orchestration** | Kubernetes 1.30 (Kind locally, AWS EKS in cloud) |
+| **Infrastructure** | Terraform (modular) |
+| **Cloud** | AWS — EKS, RDS PostgreSQL, VPC, KMS, IAM, NAT Gateway, ECR |
+| **Registry** | Amazon ECR (private) |
+
+---
+
+## 🏗️ Architecture at a Glance
+
+Three isolated network tiers enforce strict workload separation:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  AWS VPC  (10.0.0.0/16)                                     │
+│                                                             │
+│  ┌──────────────┐   ┌──────────────────┐   ┌────────────┐  │
+│  │ Public       │   │ Private          │   │ Isolated   │  │
+│  │ Subnets      │   │ Subnets          │   │ Subnets    │  │
+│  │              │   │                  │   │            │  │
+│  │  NAT Gateway │   │  EKS Node Group  │   │  RDS PG 15 │  │
+│  │  (egress)    │   │  ArgoCD          │   │  (no IGW,  │  │
+│  │              │   │  Spring Boot API │   │   no NAT)  │  │
+│  └──────────────┘   └──────────────────┘   └────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+- EKS worker nodes communicate with the control plane over **private endpoints only**.
+- RDS accepts connections **exclusively** from the EKS cluster security group on port `5432`.
+- Application pod egress is restricted to DNS (`UDP 53`) and PostgreSQL (`TCP 5432`).
+
+---
+
+## 🔐 Security Hardening Highlights
+
+**Container hardening:**
+- Multi-stage Docker build — Maven toolchain never ships to the runtime image
+- Distroless base image — no shell, no package manager, minimal attack surface
+- Non-root runtime — unprivileged `appuser` (UID `10001`)
+- Immutable root filesystem (`readOnlyRootFilesystem: true`); `/tmp` uses `emptyDir`
+
+**Kubernetes hardening:**
+- Default-deny NetworkPolicy — all traffic blocked unless explicitly permitted
+- Egress allow-list: CoreDNS (`UDP 53`) and PostgreSQL (`TCP 5432`) only
+- CPU and memory resource limits on every pod
+
+**AWS / Terraform hardening:**
+- EKS nodes provisioned with `ec2_ssh_key = null` — SSH surface eliminated
+- RDS security group accepts inbound only from the EKS cluster SG (no public exposure)
+- KMS encryption enabled on all RDS storage volumes
+- Least-privilege IAM roles scoped separately for control-plane and worker nodes
+
+---
+
+## 💡 Why This Project Matters
+
+Most GitOps tutorials stop at deploying an app. This project goes further:
+
+1. **Security is structural, not bolted on.** Isolation, encryption, and least-privilege are baked into the Terraform modules, Helm chart, and Kubernetes manifests — not applied as afterthoughts.
+2. **The Terraform pattern library is reusable.** Atomic, single-responsibility modules (`network`, `iam`, `compute`, `database`) are composed at the environment layer, enabling multi-environment rollout without module duplication.
+3. **The local-first workflow mirrors real platform engineering.** Kind validation before cloud promotion reduces cloud spend and catch configuration errors before they become expensive incidents.
+4. **The architectural retrospective is honest.** The Secret Management section documents the current demo trade-offs and the production-grade IRSA + External Secrets Operator path forward — showing engineering judgement, not just happy-path demos.
 
 ---
 
