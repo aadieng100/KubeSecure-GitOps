@@ -120,6 +120,22 @@ Start GitOps syncing:
 kubectl apply -f argocd/application.yaml
 ```
 
+Access the ArgoCD Web UI (via port-forward or ingress) to monitor the synchronization state of the application:
+
+##### 🔐 1. Authentication Portal
+Log in using your administrator credentials:
+
+<p align="center">
+  <img src="docs/images/ArgoCD01.png" alt="ArgoCD Login Portal" width="90%" />
+</p>
+
+##### 🟢 2. Application Synchronization
+Once authenticated, verify that the `kubesecure-api-gitops` application is successfully synchronized (`Healthy` and `Synced` status):
+
+<p align="center">
+  <img src="docs/images/ArgoCD02.png" alt="ArgoCD Application Dashboard" width="90%" />
+</p>
+
 ### Phase 2 — Production Cloud Shift (AWS)
 
 Initialize and provision the cloud infrastructure:
