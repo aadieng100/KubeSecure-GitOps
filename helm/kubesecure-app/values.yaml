@@ -9,11 +9,11 @@ image:
   tag: "1.0.0"
 
 # Target environment toggle: 'local' or 'aws'
-environment: "local"
+environment: "aws"
 
 # Database connection details (Injected into Spring Boot)
 database:
-  host: "postgres-service"
+  host: "kubesecure-final-demo-db.ctqmyo4akkym.eu-west-3.rds.amazonaws.com"
   port: 5432
   name: "kubesecure_db"
   user: "postgres"
